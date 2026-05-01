@@ -49,12 +49,15 @@ export default function Home() {
     const selectedSize = selectedSizes[product.id];
 
     if (!selectedSize) {
-      alert("Choisissez une taille svp");
+      alert("Veuillez choisir une taille avant d’ajouter ce produit au panier.");
       return;
     }
 
     setCart([...cart, { ...product, selectedSize }]);
-    alert(`${product.name} taille ${selectedSize} ajouté au panier 🛒`);
+
+    alert(
+      `Votre article a bien été ajouté au panier 🛍️\n\nProduit : ${product.name}\nTaille : ${selectedSize}`
+    );
   };
 
   const removeFromCart = (index: number) => {
@@ -73,40 +76,41 @@ export default function Home() {
       !clientInfo.city ||
       !clientInfo.postalCode
     ) {
-      alert("Remplissez toutes les informations obligatoires svp");
+      alert("Veuillez remplir tous les champs obligatoires pour continuer.");
       return;
     }
 
     if (cart.length === 0) {
-      alert("Votre panier est vide");
+      alert("Votre panier est vide. Veuillez ajouter un produit avant de continuer.");
       return;
     }
 
     setOrderConfirmed(true);
-    alert("Commande confirmée ✅");
+    alert("Votre commande a été confirmée avec succès 🎉");
   };
 
   const orderOnWhatsApp = () => {
     if (!orderConfirmed) {
-      alert("Veuillez confirmer la commande d'abord");
+      alert("Veuillez confirmer votre commande avant de continuer.");
       return;
     }
 
-    let message = "Bonjour, je veux commander :%0A%0A";
+    let message = "Bonjour 👋%0AJe souhaite passer une commande :%0A%0A";
 
     cart.forEach((item, index) => {
-      message += `${index + 1}- ${item.name}%0A`;
-      message += `Taille : ${item.selectedSize}%0A`;
-      message += `Prix : ${item.price}€%0A%0A`;
+      message += `🛍 Produit ${index + 1} : ${item.name}%0A`;
+      message += `📏 Taille : ${item.selectedSize}%0A`;
+      message += `💰 Prix : ${item.price}€%0A%0A`;
     });
 
-    message += `Total : ${total}€%0A%0A`;
-    message += `Nom : ${clientInfo.fullName}%0A`;
-    message += `Téléphone : ${clientInfo.phone}%0A`;
-    message += `Adresse : ${clientInfo.address}%0A`;
-    message += `Ville : ${clientInfo.city}%0A`;
-    message += `Code postal : ${clientInfo.postalCode}%0A`;
-    message += `Note : ${clientInfo.note}`;
+    message += `💳 Total : ${total}€%0A%0A`;
+    message += `👤 Nom : ${clientInfo.fullName}%0A`;
+    message += `📞 Téléphone : ${clientInfo.phone}%0A`;
+    message += `📍 Adresse : ${clientInfo.address}%0A`;
+    message += `🏙 Ville : ${clientInfo.city}%0A`;
+    message += `📮 Code postal : ${clientInfo.postalCode}%0A`;
+    message += `📝 Note : ${clientInfo.note || "Aucune"}%0A%0A`;
+    message += "Merci 🙏";
 
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
   };
@@ -176,9 +180,7 @@ export default function Home() {
                 {product.name}
               </h2>
 
-              <p className="text-3xl font-bold mt-2">
-                {product.price}€
-              </p>
+              <p className="text-3xl font-bold mt-2">{product.price}€</p>
 
               <div className="flex gap-2 mt-4 flex-wrap">
                 {product.sizes.map((size) => (
@@ -219,9 +221,7 @@ export default function Home() {
         </h2>
 
         {cart.length === 0 ? (
-          <p className="text-center text-gray-400">
-            Votre panier est vide
-          </p>
+          <p className="text-center text-gray-400">Votre panier est vide</p>
         ) : (
           <>
             <div className="space-y-6">
@@ -238,9 +238,7 @@ export default function Home() {
                     />
 
                     <div>
-                      <h3 className="font-bold text-xl">
-                        {item.name}
-                      </h3>
+                      <h3 className="font-bold text-xl">{item.name}</h3>
                       <p>Taille : {item.selectedSize}</p>
                       <p>{item.price}€</p>
                     </div>
@@ -258,9 +256,7 @@ export default function Home() {
 
             {/* CLIENT INFO */}
             <div className="mt-10 bg-white text-black rounded-3xl p-6 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold mb-6">
-                Informations client
-              </h3>
+              <h3 className="text-2xl font-bold mb-6">Informations client</h3>
 
               <div className="grid gap-4">
                 <input required className="border p-3 rounded-xl" placeholder="Nom complet *" value={clientInfo.fullName} onChange={(e) => setClientInfo({ ...clientInfo, fullName: e.target.value })} />
@@ -274,9 +270,7 @@ export default function Home() {
 
             {/* TOTAL + BUTTONS */}
             <div className="text-center mt-10">
-              <h3 className="text-3xl font-bold mb-4">
-                Total : {total}€
-              </h3>
+              <h3 className="text-3xl font-bold mb-4">Total : {total}€</h3>
 
               <button
                 onClick={confirmOrder}
