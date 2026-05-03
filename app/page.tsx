@@ -18,18 +18,18 @@ export default function Home() {
   const whatsappNumber = "33766226161";
 
   const products: Product[] = [
-    { id: 1, name: "ELYM T-Shirt Model 1", price: 50, image: "/images/shirt1.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 2, name: "ELYM T-Shirt Model 2", price: 50, image: "/images/shirt2.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 3, name: "ELYM T-Shirt Model 3", price: 50, image: "/images/shirt3.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 4, name: "ELYM T-Shirt Model 4", price: 50, image: "/images/shirt4.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 5, name: "ELYM T-Shirt Model 5", price: 50, image: "/images/shirt5.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 6, name: "ELYM T-Shirt Model 6", price: 50, image: "/images/shirt6.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 7, name: "ELYM T-Shirt Model 7", price: 50, image: "/images/shirt7.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 8, name: "ELYM T-Shirt Model 8", price: 50, image: "/images/shirt8.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 9, name: "ELYM T-Shirt Model 9", price: 50, image: "/images/shirt9.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 10, name: "ELYM T-Shirt Model 10", price: 50, image: "/images/shirt10.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 11, name: "ELYM T-Shirt Model 11", price: 50, image: "/images/shirt11.jpeg", sizes: ["S", "M", "L", "XL"] },
-    { id: 12, name: "ELYM T-Shirt Model 12", price: 50, image: "/images/shirt12.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 1, name: "ELYM T-Shirt Noir", price: 50, image: "/images/shirt1.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 2, name: "ELYM T-Shirt Blanc", price: 50, image: "/images/shirt2.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 3, name: "ELYM T-Shirt Noir", price: 50, image: "/images/shirt3.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 4, name: "ELYM T-Shirt Blanc", price: 50, image: "/images/shirt4.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 5, name: "ELYM T-Shirt Noir", price: 50, image: "/images/shirt5.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 6, name: "ELYM T-Shirt Blanc", price: 50, image: "/images/shirt6.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 7, name: "ELYM T-Shirt Noir", price: 50, image: "/images/shirt7.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 8, name: "ELYM T-Shirt Blanc", price: 50, image: "/images/shirt8.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 9, name: "ELYM T-Shirt Noir", price: 50, image: "/images/shirt9.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 10, name: "ELYM T-Shirt Blanc", price: 50, image: "/images/shirt10.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 11, name: "ELYM T-Shirt Noir", price: 50, image: "/images/shirt11.jpeg", sizes: ["S", "M", "L", "XL"] },
+    { id: 12, name: "ELYM T-Shirt Blanc", price: 50, image: "/images/shirt12.jpeg", sizes: ["S", "M", "L", "XL"] },
   ];
 
   const [cart, setCart] = useState<CartItem[]>([]);
