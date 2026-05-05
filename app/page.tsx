@@ -325,30 +325,9 @@ export default function Home() {
                Payer avec PayPal
             </a>
 
-           <div className="mt-12 max-w-3xl mx-auto bg-white/10 border border-white/20 rounded-3xl p-6">
-             <h3 className="text-3xl font-bold mb-6 text-center">
-              Suivi de commande
-             </h3>
-
-           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 text-center">
-             <div className="bg-green-500 text-black rounded-2xl p-4 font-bold">
-              1. Confirmée
-             </div>
-             <div className="bg-white text-black rounded-2xl p-4 font-bold">
-              2. Paiement
-             </div>
-             <div className="bg-white text-black rounded-2xl p-4 font-bold">
-              3. Emballage
-             </div>
-             <div className="bg-white text-black rounded-2xl p-4 font-bold">
-              4. En route
-             </div>
-             <div className="bg-white text-black rounded-2xl p-4 font-bold">
-              5. Livré
-             </div>
-           </div>
+        
          </div>
-       </div>
+       
       </>
         )}
       </section>
