@@ -163,15 +163,6 @@ export default function Admin() {
           />
 
           <input
-            placeholder="Image ex: /images/shirt1.jpeg"
-            className="border p-3 rounded-xl"
-            value={newProduct.image}
-            onChange={(e) =>
-              setNewProduct({ ...newProduct, image: e.target.value })
-            }
-          />
-
-          <input
             placeholder="Description"
             className="border p-3 rounded-xl"
             value={newProduct.description}
@@ -184,13 +175,36 @@ export default function Admin() {
           />
 
           <input
-            placeholder="Tailles S,M,L,XL"
-            className="border p-3 rounded-xl"
-            value={newProduct.sizes}
-            onChange={(e) =>
-              setNewProduct({ ...newProduct, sizes: e.target.value })
-            }
-          />
+  type="file"
+  className="border p-3 rounded-xl"
+  onChange={async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const fileName = Date.now() + "-" + file.name;
+
+    const { error } = await supabase.storage
+      .from("products")
+      .upload(fileName, file);
+
+    if (error) {
+      alert("Erreur upload ❌");
+      console.log(error);
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("products")
+      .getPublicUrl(fileName);
+
+    setNewProduct({
+      ...newProduct,
+      image: data.publicUrl,
+    });
+
+    alert("Image uploadée ✅");
+  }}
+/>
 
           <button
             onClick={addProduct}
