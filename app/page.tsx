@@ -10,7 +10,6 @@ type Product = {
   image: string;
   sizes: string[];
 };
-
 type ProductDB = {
   id: number;
   name: string;

@@ -175,36 +175,36 @@ export default function Admin() {
           />
 
           <input
-  type="file"
-  className="border p-3 rounded-xl"
-  onChange={async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+         type="file"
+         className="border p-3 rounded-xl"
+         onChange={async (e) => {
+           const file = e.target.files?.[0];
+           if (!file) return;
 
-    const fileName = Date.now() + "-" + file.name;
+           const fileName = Date.now() + "-" + file.name;
 
-    const { error } = await supabase.storage
-      .from("products")
-      .upload(fileName, file);
+           const { error } = await supabase.storage
+            .from("products")
+            .upload(fileName, file);
 
-    if (error) {
-      alert("Erreur upload ❌");
-      console.log(error);
-      return;
-    }
+             if (error) {
+             alert("Erreur upload ❌");
+             console.log(error);
+             return;
+             }
 
-    const { data } = supabase.storage
-      .from("products")
-      .getPublicUrl(fileName);
+           const { data } = supabase.storage
+             .from("products")
+             .getPublicUrl(fileName);
 
-    setNewProduct({
-      ...newProduct,
-      image: data.publicUrl,
-    });
+           setNewProduct({
+           ...newProduct,
+           image: data.publicUrl,
+           });
 
-    alert("Image uploadée ✅");
-  }}
-/>
+          alert("Image uploadée ✅");
+          }}
+         />
 
           <button
             onClick={addProduct}
