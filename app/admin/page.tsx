@@ -1,92 +1,125 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 type Product = {
   id: number;
   name: string;
   price: number;
-  stock: number;
+  stock: number | null;
   image: string;
-  sizes: string[];
+  description: string;
+  sizes: string;
 };
 
 export default function Admin() {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: "ELYM T-Shirt Model 1",
-      price: 50,
-      stock: 10,
-      image: "/images/shirt1.jpeg",
-      sizes: ["S", "M", "L", "XL"],
-    },
-    {
-      id: 2,
-      name: "ELYM T-Shirt Model 2",
-      price: 50,
-      stock: 5,
-      image: "/images/shirt2.jpeg",
-      sizes: ["S", "M", "L", "XL"],
-    },
-  ]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
     stock: "",
     image: "",
-    sizes: "",
+    description: "",
+    sizes: "S,M,L,XL",
   });
 
-  const addProduct = () => {
-    if (
-      !newProduct.name ||
-      !newProduct.price ||
-      !newProduct.stock ||
-      !newProduct.image ||
-      !newProduct.sizes
-    ) {
-      alert("Veuillez remplir tous les champs.");
+  // 🔥 GET PRODUCTS
+  const fetchProducts = async () => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.log(error);
+      alert("Erreur chargement ❌");
       return;
     }
 
-    const product: Product = {
-      id: Date.now(),
-      name: newProduct.name,
-      price: Number(newProduct.price),
-      stock: Number(newProduct.stock),
-      image: newProduct.image,
-      sizes: newProduct.sizes.split(",").map((size) => size.trim()),
-    };
+    setProducts(data || []);
+  };
 
-    setProducts([...products, product]);
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // 🔥 ADD PRODUCT
+  const addProduct = async () => {
+    if (!newProduct.name || !newProduct.price || !newProduct.image) {
+      alert("Remplis les champs importants ⚠️");
+      return;
+    }
+
+    setLoading(true);
+
+    const { error } = await supabase.from("products").insert([
+      {
+        name: newProduct.name,
+        price: Number(newProduct.price),
+        stock: newProduct.stock ? Number(newProduct.stock) : null,
+        image: newProduct.image,
+        description: newProduct.description,
+        sizes: newProduct.sizes,
+      },
+    ]);
+
+    setLoading(false);
+
+    if (error) {
+      console.log(error);
+      alert("Erreur❌: " + error.message);
+      return;
+    }
+
+    alert("Produit ajouté ✅");
 
     setNewProduct({
       name: "",
       price: "",
       stock: "",
       image: "",
-      sizes: "",
+      description: "",
+      sizes: "S,M,L,XL",
     });
 
-    alert("Produit ajouté avec succès ✅");
+    fetchProducts();
   };
 
-  const deleteProduct = (id: number) => {
-    setProducts(products.filter((product) => product.id !== id));
+  // 🔥 DELETE
+  const deleteProduct = async (id: number) => {
+    const { error } = await supabase.from("products").delete().eq("id", id);
+
+    if (error) {
+      console.log(error);
+      alert("Erreur suppression ❌");
+      return;
+    }
+
+    fetchProducts();
   };
 
-  const updateProduct = (
+  // 🔥 UPDATE
+  const updateProduct = async (
     id: number,
     field: keyof Product,
-    value: string | number | string[]
+    value: string | number | null
   ) => {
-    setProducts(
-      products.map((product) =>
-        product.id === id ? { ...product, [field]: value } : product
-      )
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
     );
+
+    const { error } = await supabase
+      .from("products")
+      .update({ [field]: value })
+      .eq("id", id);
+
+    if (error) {
+      console.log(error);
+      alert("Erreur modification ❌");
+    }
   };
 
   return (
@@ -95,6 +128,7 @@ export default function Admin() {
         Admin Dashboard
       </h1>
 
+      {/* ADD PRODUCT */}
       <div className="bg-white text-black p-6 rounded-3xl max-w-xl mx-auto mb-10 shadow-xl">
         <h2 className="text-2xl font-bold mb-5">Ajouter produit</h2>
 
@@ -119,7 +153,7 @@ export default function Admin() {
           />
 
           <input
-            placeholder="Stock ex: 10"
+            placeholder="Stock"
             type="number"
             className="border p-3 rounded-xl"
             value={newProduct.stock}
@@ -138,7 +172,19 @@ export default function Admin() {
           />
 
           <input
-            placeholder="Tailles ex: S,M,L,XL"
+            placeholder="Description"
+            className="border p-3 rounded-xl"
+            value={newProduct.description}
+            onChange={(e) =>
+              setNewProduct({
+                ...newProduct,
+                description: e.target.value,
+              })
+            }
+          />
+
+          <input
+            placeholder="Tailles S,M,L,XL"
             className="border p-3 rounded-xl"
             value={newProduct.sizes}
             onChange={(e) =>
@@ -148,13 +194,15 @@ export default function Admin() {
 
           <button
             onClick={addProduct}
+            disabled={loading}
             className="bg-black text-white py-3 rounded-xl font-bold"
           >
-            Ajouter le produit
+            {loading ? "Ajout..." : "Ajouter"}
           </button>
         </div>
       </div>
 
+      {/* PRODUCTS LIST */}
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
         {products.map((product) => (
           <div
@@ -164,15 +212,14 @@ export default function Admin() {
             <div className="h-56 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden mb-5">
               <img
                 src={product.image}
-                alt={product.name}
                 className="w-full h-full object-contain"
               />
             </div>
 
             <div className="grid gap-3">
               <input
-                className="border p-3 rounded-xl font-bold"
                 value={product.name}
+                className="border p-3 rounded-xl font-bold"
                 onChange={(e) =>
                   updateProduct(product.id, "name", e.target.value)
                 }
@@ -180,8 +227,8 @@ export default function Admin() {
 
               <input
                 type="number"
-                className="border p-3 rounded-xl"
                 value={product.price}
+                className="border p-3 rounded-xl"
                 onChange={(e) =>
                   updateProduct(product.id, "price", Number(e.target.value))
                 }
@@ -189,42 +236,46 @@ export default function Admin() {
 
               <input
                 type="number"
+                value={product.stock ?? ""}
                 className="border p-3 rounded-xl"
-                value={product.stock}
                 onChange={(e) =>
-                  updateProduct(product.id, "stock", Number(e.target.value))
+                  updateProduct(
+                    product.id,
+                    "stock",
+                    e.target.value ? Number(e.target.value) : null
+                  )
                 }
               />
 
               <input
-                className="border p-3 rounded-xl"
                 value={product.image}
+                className="border p-3 rounded-xl"
                 onChange={(e) =>
                   updateProduct(product.id, "image", e.target.value)
                 }
               />
 
               <input
+                value={product.description || ""}
                 className="border p-3 rounded-xl"
-                value={product.sizes.join(",")}
                 onChange={(e) =>
-                  updateProduct(
-                    product.id,
-                    "sizes",
-                    e.target.value.split(",").map((size) => size.trim())
-                  )
+                  updateProduct(product.id, "description", e.target.value)
                 }
               />
 
-              <p className="font-bold">
-                Stock restant : {product.stock} pièce(s)
-              </p>
+              <input
+                value={product.sizes || ""}
+                className="border p-3 rounded-xl"
+                onChange={(e) =>
+                  updateProduct(product.id, "sizes", e.target.value)
+                }
+              />
 
               <button
                 onClick={() => deleteProduct(product.id)}
                 className="bg-red-500 text-white py-3 rounded-xl font-bold"
               >
-                Supprimer le produit
+                Supprimer
               </button>
             </div>
           </div>
