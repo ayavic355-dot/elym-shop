@@ -28,19 +28,19 @@ export default function Admin() {
 
   // 🔥 GET PRODUCTS
   const fetchProducts = async () => {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .order("id", { ascending: true });
+  const { data, error } = await supabase
+    .from("products")
+    .select("*");
 
-    if (error) {
-      console.log(error);
-      alert("Erreur chargement ❌");
-      return;
-    }
+  if (error) {
+    console.log("ADMIN PRODUCTS ERROR:", error);
+    alert("Erreur chargement ❌: " + error.message);
+    return;
+  }
 
-    setProducts(data || []);
-  };
+  console.log("PRODUCTS ADMIN:", data);
+  setProducts(data || []);
+};
 
   useEffect(() => {
     fetchProducts();
@@ -124,9 +124,16 @@ export default function Admin() {
 
   return (
     <main className="min-h-screen bg-black text-white p-4 md:p-8">
-      <h1 className="text-4xl font-bold mb-10 text-center">
-        Admin Dashboard
-      </h1>
+     <h1 className="text-4xl font-bold mb-10 text-center">
+      Admin Dashboard
+     </h1>
+
+     <a
+       href="/admin/orders"
+       className="block max-w-xl mx-auto bg-white text-black text-center py-4 rounded-xl font-bold mb-10"
+     >
+       Voir les commandes
+     </a>
 
       {/* ADD PRODUCT */}
       <div className="bg-white text-black p-6 rounded-3xl max-w-xl mx-auto mb-10 shadow-xl">
